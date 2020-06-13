@@ -1,0 +1,9 @@
+#ddns KEY
+AccessKeyID: LTAI4Fzm5ZfXvVq4oaYo9Eng
+#ddns VALUE
+AccessKeySecret: 7HFgCETtNH10GqGJAx7ScImJR9BYEQ
+#主域名
+DomainName: amiemall.com
+#子域名前缀
+RR: ipv6
+
