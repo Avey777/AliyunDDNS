@@ -1,7 +1,9 @@
 package main
 
 import (
-	log "Goproject/src/Study/logger"
+	// log "Goproject/src/Study/logger"
+	// "aliyunddns/pkg/aliyungo/dns" //第三方库
+	log "aliyunddns/pkg/logger"
 	"bufio"
 	"fmt"
 	"io/ioutil"
@@ -13,27 +15,30 @@ import (
 	"strings"
 	"time"
 
+	// log "github.com/Avey777/Goproject/src/Study/logger"
+
 	"github.com/denverdino/aliyungo/dns"
 	"gopkg.in/yaml.v2"
 )
 
 func main() {
-	//a := getMyIPV6()
-	//fmt.Printf(a)
 
-	//var c conf
-	//conf := c.getConf()
-	//a := conf.RR
-	//fmt.Printf(a)
+	// a := getMyIPV6()
+	// fmt.Printf(a)
 
-	//ddnsipv6() //允许DDNS
+	// var c conf
+	// conf := c.getConf()
+	// a := conf.RR
+	// fmt.Printf(a)
+
+	// ddnsipv6() //允许DDNS
 
 	// for {
 	// 	//调试
-	// 	//ipv6 :=ReadLineFile("../src/Tools/AliyunDDNS/readtxt.txt")
+	// 	ipv6 := ReadLineFile("..//AliyunDDNS/readtxt.txt")
 	// 	//实际使用
-	// 	ipv6 := ReadLineFile("readtxt.txt")
-	// 	fmt.Printf(ipv6)
+	// 	// ipv6 := ReadLineFile("readtxt.txt")
+	// 	fmt.Printf("yamlipv6:", ipv6)
 	// 	if ipv6 != getMyIPV6() {
 	// 		WriteLine(getMyIPV6())
 	// 		ddnsipv6()
@@ -43,16 +48,18 @@ func main() {
 	// 	time.Sleep(time.Second * 3)
 	// }
 
-	//ipv6 :=ReadLineFile("readtxt.txt")
-	//fmt.Printf(ipv6)
-	//if ipv6 != getMyIPV6(){
-	//	WriteLine(getMyIPV6())
-	//	ddnsipv6()
-	//}else {
-	//	log.Info("ipv6地址未改变", time.Now())
-	//}
+	// ipv6 := ReadLineFile("readtxt.txt")
+	// fmt.Printf(ipv6)
+	// if ipv6 != getMyIPV6() {
+	// 	WriteLine(getMyIPV6())
+	// 	ddnsipv6()
+	// } else {
+	// 	log.Info("ipv6地址未改变", time.Now())
+	// }
 
+	// yamlarr()
 	tickTimerChan()
+
 }
 
 //Conf 定义域名相关配置信息
@@ -65,8 +72,8 @@ type conf struct {
 
 //yaml读取函数
 func (c *conf) getConf() *conf {
-	//yamlFile, err := ioutil.ReadFile("src/Tools/AliyunDDNS/conf.yaml") //调试
-	yamlFile, err := ioutil.ReadFile("conf.yaml") //实际使用
+	yamlFile, err := ioutil.ReadFile("../AliyunDDNS/AliyunDDNS/conf.yaml") //调试
+	//yamlFile, err := ioutil.ReadFile("conf.yaml") //实际使用
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -96,17 +103,20 @@ func getMyIPV6() string {
 func tickTimerChan() {
 	ticker := time.NewTicker(time.Second * time.Duration(3))
 	var tickChan = make(chan int)
-	go func() {
+	func() {
 		for t := range ticker.C {
 			// fmt.Println("im doing some biz")
 			fmt.Println("Tick ar:", t.Format("2006.01.02 15:04:05"))
-			ipv6 := ReadLineFile("readtxt.txt")
-			fmt.Printf(ipv6)
-			if ipv6 != getMyIPV6() {
-				WriteLine(getMyIPV6())
-				ddnsipv6()
-			} else {
+			ipv6 := ReadLineFile("../AliyunDDNS/AliyunDDNS/readipv6.txt") //调试
+			// ipv6 := ReadLineFile("readipv6.txt") // 正式
+			log.Info("readipv6:", ipv6)
+			if ipv6 == getMyIPV6() {
+
 				log.Info("ipv6地址未改变", time.Now())
+			} else {
+				WriteLine(getMyIPV6())
+				yamlarr()
+				log.Info("ipv6地址更新", time.Now())
 			}
 		}
 		tickChan <- 0
@@ -119,8 +129,34 @@ func tickTimerChan() {
 	fmt.Println("ticker stopped")
 }
 
+//处理yaml文件信息, 转换字符串为数组
+func yamlarr() {
+	var con conf
+	yaml := con.getConf()
+	// fmt.Println(yaml)
+	//逗号分隔字符串
+	sep := ","
+	arr := strings.Split(yaml.RR, sep)
+	// fmt.Println(arr)
+
+	for _, arr := range arr {
+		ddnsipv6(arr)
+		// fmt.Println(RRNEW)
+
+		fmt.Printf("v2的数据类型为：%T\n", arr)
+
+	}
+
+	// RRNEW := []string{arr}
+	// for i := 0; i < len(RRNEW); i++ {
+	// 	// ddnsipv6()
+	// 	fmt.Println(RRNEW)
+	// }
+
+}
+
 //阿里云DDNS
-func ddnsipv6() {
+func ddnsipv6(RRNEW string) {
 	var c conf
 	yaml := c.getConf()
 
@@ -128,8 +164,11 @@ func ddnsipv6() {
 	publicIP := getMyIPV6()
 	//DomainName := "amiemall.com"
 	DomainName := yaml.DomainName
-	//RR := "ipv6"
-	RR := yaml.RR
+
+	// // RR := "ipv6"
+	// RRNEW := yaml.RR
+	// log.Info("RRNEW", RRNEW)
+
 	AccessKeyID := yaml.AccessKeyID
 	AccessKeySecret := yaml.AccessKeySecret
 	fmt.Printf(AccessKeyID, AccessKeySecret)
@@ -148,7 +187,7 @@ func ddnsipv6() {
 
 	var exsitRecordID string
 	for _, record := range oldRecord.DomainRecords.Record {
-		if record.DomainName == DomainName && record.RR == RR {
+		if record.DomainName == DomainName && record.RR == RRNEW {
 			if record.Value == publicIP {
 				fmt.Println("当前配置解析地址与公网IP相同，不需要修改。")
 				return
@@ -161,7 +200,7 @@ func ddnsipv6() {
 		// 有配置记录，则匹配配置文件，进行更新操作
 		updateRecord := new(dns.UpdateDomainRecordArgs)
 		updateRecord.RecordId = exsitRecordID
-		updateRecord.RR = RR
+		updateRecord.RR = RRNEW
 		updateRecord.Value = publicIP
 		updateRecord.Type = dns.AAAARecord //ipv6 使用ARecord
 		rsp := new(dns.UpdateDomainRecordResponse)
@@ -175,7 +214,7 @@ func ddnsipv6() {
 		// 没有找到配置记录，那么就新增一个
 		newRecord := new(dns.AddDomainRecordArgs)
 		newRecord.DomainName = DomainName
-		newRecord.RR = RR
+		newRecord.RR = RRNEW
 		newRecord.Value = publicIP
 		newRecord.Type = dns.AAAARecord //ipv6 使用ARecord
 		rsp := new(dns.AddDomainRecordResponse)
@@ -186,14 +225,15 @@ func ddnsipv6() {
 			fmt.Println("添加DNS解析成功", rsp)
 		}
 	}
+
 }
 
 //向文件中写入内容
 func WriteLine(content string) {
 	//调试
-	//ioutil.WriteFile("../src/Tools/AliyunDDNS/readtxt.txt",[]byte(content),0777)  //如果文件a.txt已经存在那么会忽略权限参数，清空文件内容。文件不存在会创建文件赋予权限
+	ioutil.WriteFile("../AliyunDDNS/AliyunDDNS/readipv6.txt", []byte(content), 0777) //如果文件a.txt已经存在那么会忽略权限参数，清空文件内容。文件不存在会创建文件赋予权限
 	//实际使用
-	ioutil.WriteFile("readtxt.txt", []byte(content), 0777) //如果文件a.txt已经存在那么会忽略权限参数，清空文件内容。文件不存在会创建文件赋予权限
+	//ioutil.WriteFile("readtxt.txt", []byte(content), 0777) //如果文件a.txt已经存在那么会忽略权限参数，清空文件内容。文件不存在会创建文件赋予权限
 }
 
 //读取txt文件

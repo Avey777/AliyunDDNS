@@ -4,6 +4,5 @@ AccessKeyID: LTAI4Fzm5ZfXvVq4oaYo9Eng
 AccessKeySecret: 7HFgCETtNH10GqGJAx7ScImJR9BYEQ
 #主域名
 DomainName: amiemall.com
-#子域名前缀
-RR: ipv6
-
+#子域名前缀(多个子域名配置示例RR: ipv6,tank6)
+RR: ipv6,tank6,gitea6,remote6

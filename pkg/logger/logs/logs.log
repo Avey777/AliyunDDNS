@@ -1,0 +1,8 @@
+map[RFC8889Nano:2020-06-28T20:01:58.7476441+08:00] [TRAC] [e:/Documents/Github/Goproject/src/main.go:67] this is Trace:LogsOut()运行启动
+map[RFC8889Nano:2020-06-28T20:01:58.7486438+08:00] [DEBG] [e:/Documents/Github/Goproject/src/main.go:68] this is Debug
+map[RFC8889Nano:2020-06-28T20:01:58.7486438+08:00] [INFO] [e:/Documents/Github/Goproject/src/main.go:69] this is Info
+map[RFC8889Nano:2020-06-28T20:01:58.7486438+08:00] [WARN] [e:/Documents/Github/Goproject/src/main.go:70] this is Warn
+map[RFC8889Nano:2020-06-28T20:01:58.7486438+08:00] [EROR] [e:/Documents/Github/Goproject/src/main.go:71] this is Error
+map[RFC8889Nano:2020-06-28T20:01:58.7486438+08:00] [CRIT] [e:/Documents/Github/Goproject/src/main.go:72] this is Critical
+map[RFC8889Nano:2020-06-28T20:01:58.7486438+08:00] [ALRT] [e:/Documents/Github/Goproject/src/main.go:73] this is Alert
+map[RFC8889Nano:2020-06-28T20:01:58.7486438+08:00] [EMER] [e:/Documents/Github/Goproject/src/main.go:74] this is Emergency：LogsOut()运行结束
