@@ -35,9 +35,9 @@ func main() {
 
 	// for {
 	// 	//调试
-	// 	ipv6 := ReadLineFile("..//AliyunDDNS/readtxt.txt")
+	// 	ipv6 := ReadLineFile("..//AliyunDDNS/readipv6.txt")
 	// 	//实际使用
-	// 	// ipv6 := ReadLineFile("readtxt.txt")
+	// 	// ipv6 := ReadLineFile("readipv6.txt")
 	// 	fmt.Printf("yamlipv6:", ipv6)
 	// 	if ipv6 != getMyIPV6() {
 	// 		WriteLine(getMyIPV6())
@@ -48,7 +48,7 @@ func main() {
 	// 	time.Sleep(time.Second * 3)
 	// }
 
-	// ipv6 := ReadLineFile("readtxt.txt")
+	// ipv6 := ReadLineFile("readipv6.txt")
 	// fmt.Printf(ipv6)
 	// if ipv6 != getMyIPV6() {
 	// 	WriteLine(getMyIPV6())
@@ -72,8 +72,8 @@ type conf struct {
 
 //yaml读取函数
 func (c *conf) getConf() *conf {
-	yamlFile, err := ioutil.ReadFile("../AliyunDDNS/AliyunDDNS/conf.yaml") //调试
-	//yamlFile, err := ioutil.ReadFile("conf.yaml") //实际使用
+	// yamlFile, err := ioutil.ReadFile("../AliyunDDNS/AliyunDDNS/conf.yaml") //调试
+	yamlFile, err := ioutil.ReadFile("conf.yaml") //实际使用
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -107,8 +107,8 @@ func tickTimerChan() {
 		for t := range ticker.C {
 			// fmt.Println("im doing some biz")
 			fmt.Println("Tick ar:", t.Format("2006.01.02 15:04:05"))
-			ipv6 := ReadLineFile("../AliyunDDNS/AliyunDDNS/readipv6.txt") //调试
-			// ipv6 := ReadLineFile("readipv6.txt") // 正式
+			// ipv6 := ReadLineFile("../AliyunDDNS/AliyunDDNS/readipv6.txt") //调试
+			ipv6 := ReadLineFile("readipv6.txt") // 正式
 			log.Info("readipv6:", ipv6)
 			if ipv6 == getMyIPV6() {
 
@@ -231,9 +231,9 @@ func ddnsipv6(RRNEW string) {
 //向文件中写入内容
 func WriteLine(content string) {
 	//调试
-	ioutil.WriteFile("../AliyunDDNS/AliyunDDNS/readipv6.txt", []byte(content), 0777) //如果文件a.txt已经存在那么会忽略权限参数，清空文件内容。文件不存在会创建文件赋予权限
+	// ioutil.WriteFile("../AliyunDDNS/AliyunDDNS/readipv6.txt", []byte(content), 0777) //如果文件a.txt已经存在那么会忽略权限参数，清空文件内容。文件不存在会创建文件赋予权限
 	//实际使用
-	//ioutil.WriteFile("readtxt.txt", []byte(content), 0777) //如果文件a.txt已经存在那么会忽略权限参数，清空文件内容。文件不存在会创建文件赋予权限
+	ioutil.WriteFile("readipv6.txt", []byte(content), 0777) //如果文件a.txt已经存在那么会忽略权限参数，清空文件内容。文件不存在会创建文件赋予权限
 }
 
 //读取txt文件
