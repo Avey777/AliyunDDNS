@@ -1,4 +1,4 @@
-package main
+package src
 
 import (
 	// log "Goproject/src/Study/logger"
@@ -58,7 +58,7 @@ func main() {
 	// }
 
 	// yamlarr()
-	tickTimerChan()
+	TickTimerChan()
 
 }
 
@@ -100,7 +100,7 @@ func getMyIPV6() string {
 }
 
 //定时打印时间
-func tickTimerChan() {
+func TickTimerChan() {
 	ticker := time.NewTicker(time.Second * time.Duration(3))
 	var tickChan = make(chan int)
 	func() {
